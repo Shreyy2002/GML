@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: gms-backend
+    env: docker
+    plan: starter
+    dockerfilePath: ./backend/Dockerfile
+    rootDir: .
+    envVars:
+      - key: DEBUG
+        value: "0"
+      - key: ALLOWED_HOSTS
+        value: "gms-backend.onrender.com"
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: gms-postgres
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: gms-postgres
+          property: port
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: gms-postgres
+          property: database
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: gms-postgres
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: gms-postgres
+          property: password
+
+  - type: web
+    name: gms-frontend
+    env: docker
+    plan: starter
+    dockerfilePath: ./frontend/Dockerfile
+    rootDir: .
+    envVars:
+      - key: NEXT_PUBLIC_API_BASE_URL
+        value: https://gms-backend.onrender.com/api
+
+databases:
+  - name: gms-postgres
+    plan: starter
